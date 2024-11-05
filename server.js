@@ -14,8 +14,6 @@ dotenv.config();
 const PORT = process.env.PORT; 
 const API_BASE_URL = process.env.DEADLINE_WEBSERVICE_URL
 
-console.log ( )
-
 // Middleware to log the client IP and other details for every request
 app.use((req, res, next) => {
   // Use 'x-forwarded-for' header or req.ip to get the client IP
@@ -24,6 +22,11 @@ app.use((req, res, next) => {
   console.log(`Request method: ${req.method}`);
   console.log(`Request URL: ${req.url}`);
   next(); // Pass the request to the next middleware or route handler
+});
+
+// Root route to display a friendly message
+app.get('/', (req, res) => {
+  res.send(`THE LINE - Deadline API Proxy Server v${process.env.VERSION} is running...`);
 });
 
 // Endpoint to proxy API requests
