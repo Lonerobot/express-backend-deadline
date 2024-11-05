@@ -24,11 +24,6 @@ app.use((req, res, next) => {
   next(); // Pass the request to the next middleware or route handler
 });
 
-// Root route to display a friendly message
-// app.get('/', (req, res) => {
-//   res.send(`THE LINE - Deadline API Proxy Server v${process.env.VERSION} is running...`);
-// });
-
 app.get('/', (req, res) => {
   res.send(`
     <html>
@@ -36,42 +31,55 @@ app.get('/', (req, res) => {
         <style>
           body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #8bc34a;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
           }
           h2 {
             color: #333;
           }
           p {
             font-size: 12px;
-            color: #555;
-            text-transform : uppercase;
+            font-weight: bolder;
+            color: #FFEB3B;
+            text-transform : uppercase;            
+          }
+          div {
+            font-size: 48px;     
+            padding: 4px;   
           }
         </style>
       </head>
       <body>
         <h2>THE LINE</h2>
-        <p>Deadline API Proxy Server v${process.env.VERSION} is running...</p>
+        <div>🐭</div>
+        <p> Deadline API Proxy Server v${process.env.VERSION} is running...</p>
       </body>
     </html>
   `);
 });
 
-
-
 // Endpoint to proxy API requests
 app.get('/api/*', async (req, res) => {
   try {
-
-    // Extract the path after /api/ and append it to the target API URL
+    // Extract the path after /api/
     const apiPath = req.params[0];
-    const targetUrl = `${API_BASE_URL}/${apiPath}`;
 
+    // Construct the full target URL with query parameters
+    const queryString = req.url.split('?')[1]; // Get the query string
+    const targetUrl = queryString
+      ? `${API_BASE_URL}/${apiPath}?${queryString}`
+      : `${API_BASE_URL}/${apiPath}`;
+
+    console.log(`Query request : ${queryString}`);
     console.log(`Forwarding request to: ${targetUrl}`);
 
-    // Use axios to make the request to the target API
+    // Use axios to make the request to the target API, forwarding headers if needed
     const response = await axios.get(targetUrl, {
-      headers: { ...req.headers }, // Forward headers if needed
+      headers: { ...req.headers },
     });
 
     // Send the API response back to the client
