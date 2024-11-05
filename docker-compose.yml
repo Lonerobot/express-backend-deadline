@@ -1,0 +1,9 @@
+version: '3'
+services:
+  deadline-api-proxy:
+    image: deadline-api-proxy
+    build: .
+    ports:
+      - "3000:3000"
+    restart: always
+    container_name: deadline-api-backend-proxy
