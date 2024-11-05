@@ -8,6 +8,4 @@ or better to run this -
 
 docker-compose up --build -d
 
-docker-compose down 
-
-to stop
+docker-compose down - to stop

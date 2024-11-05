@@ -5,20 +5,36 @@ const dotenv = require ('dotenv')
 
 const app = express();
 
+app.set('trust proxy', true);
 
 // Enable CORS for all routes
 app.use(cors());
 dotenv.config();
 
-const PORT = process.env.PORT; // You can change this to any port you'd like
+const PORT = process.env.PORT; 
 const API_BASE_URL = process.env.DEADLINE_WEBSERVICE_URL
+
+console.log ( )
+
+// Middleware to log the client IP and other details for every request
+app.use((req, res, next) => {
+  // Use 'x-forwarded-for' header or req.ip to get the client IP
+  const clientIp = req.headers['x-forwarded-for'] || req.ip;
+  console.log(`Incoming request from IP: ${clientIp}`);
+  console.log(`Request method: ${req.method}`);
+  console.log(`Request URL: ${req.url}`);
+  next(); // Pass the request to the next middleware or route handler
+});
 
 // Endpoint to proxy API requests
 app.get('/api/*', async (req, res) => {
   try {
+
     // Extract the path after /api/ and append it to the target API URL
     const apiPath = req.params[0];
     const targetUrl = `${API_BASE_URL}/${apiPath}`;
+
+    console.log(`Forwarding request to: ${targetUrl}`);
 
     // Use axios to make the request to the target API
     const response = await axios.get(targetUrl, {
@@ -38,3 +54,6 @@ app.get('/api/*', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Deadline API Proxy server running on http://localhost:${PORT}`);
 });
+
+
+
