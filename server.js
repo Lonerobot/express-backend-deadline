@@ -25,9 +25,39 @@ app.use((req, res, next) => {
 });
 
 // Root route to display a friendly message
+// app.get('/', (req, res) => {
+//   res.send(`THE LINE - Deadline API Proxy Server v${process.env.VERSION} is running...`);
+// });
+
 app.get('/', (req, res) => {
-  res.send(`THE LINE - Deadline API Proxy Server v${process.env.VERSION} is running...`);
+  res.send(`
+    <html>
+      <head>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+          }
+          h2 {
+            color: #333;
+          }
+          p {
+            font-size: 12px;
+            color: #555;
+            text-transform : uppercase;
+          }
+        </style>
+      </head>
+      <body>
+        <h2>THE LINE</h2>
+        <p>Deadline API Proxy Server v${process.env.VERSION} is running...</p>
+      </body>
+    </html>
+  `);
 });
+
+
 
 // Endpoint to proxy API requests
 app.get('/api/*', async (req, res) => {
